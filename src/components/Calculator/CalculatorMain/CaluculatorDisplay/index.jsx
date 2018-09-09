@@ -5,7 +5,7 @@ import './calculator-display.css';
 const CalculatorHeader = () =>
     <div className="display-container">
         <div className="display-wrapper">
-            <span></span>
+            <span className="display">1232327890</span>
             <span>sl-300sv</span>
         </div>
     </div>

@@ -7,7 +7,7 @@ class App extends Component {
     return (
       <div className="app-wrapper">
         <h1 className="app-title">React Retro Calculator</h1>
-        <Calculator />
+          <Calculator />
       </div>
     );
   }
