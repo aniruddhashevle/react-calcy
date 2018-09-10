@@ -2,6 +2,11 @@
 @import './variables.scss';
 @import './fonts.scss';
 
+h1 {
+    margin: 20px 0;
+    font-size: 30px;
+}
+
 .text-uppercase {
     font-family: $system;
     text-transform: uppercase;
