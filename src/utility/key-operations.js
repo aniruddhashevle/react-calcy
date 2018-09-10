@@ -16,43 +16,54 @@ export const keyOperations = (keyData, state) => {
         perform
     } = keyData,
         {
-            shouldCalcySwitchedOff,
+            isCalcySwitchedOff,
             currentDisplayValue
-        } = state;
-    if (!perform && !shouldCalcySwitchedOff) {
+        } = state,
+        result = {};
+    state = { ...state, currentDisplayValue: parseValue(currentDisplayValue, true) };
+    if (!perform && !isCalcySwitchedOff) {
         if (currentDisplayValue === '' || currentDisplayValue === '0')
             return { currentDisplayValue: content }
         else return { currentDisplayValue: currentDisplayValue + content }
     } else {
         switch (type) {
-            case SYSTEM: return systemOperation(keyData, state);
-            case NUMBER: return numericOperation(keyData, state);
-            case MEMORY: return memoryOperation(keyData, state);
-            case ARITHMETIC: return arithmeticOperation(keyData, state);
-            default: return {};
+            case SYSTEM: result = systemOperation(keyData, state); break;
+            case MEMORY: result = memoryOperation(keyData, state); break;
+            case ARITHMETIC: result = arithmeticOperation(keyData, state); break;
+            default: result = {};
         }
     }
-    return {};
+    if (result && ('currentDisplayValue' in result)) {
+        result = { ...result, currentDisplayValue: parseValue(result.currentDisplayValue, false) }
+    }
+    return result;
 }
-
 
 /**
- * numeric operations
- * @return {object}
+ * parse string to number and other way around
+ * @return {number/string}
  */
-export const numericOperation = (keyData, state) => {
-    let {
-        type,
-        content,
-        perform
-    } = keyData,
-        {
-            currentDisplayValue
-        } = state,
-        result = null;
+export const parseValue = (currentDisplayValue, toNumber) => {
+    if (toNumber) {
+        return Number(currentDisplayValue);
+    } else {
+        let data = String(currentDisplayValue).split(/[eE]/);
+        if (data.length == 1) return data[0];
+
+        var z = '', sign = this < 0 ? '-' : '',
+            str = data[0].replace('.', ''),
+            mag = Number(data[1]) + 1;
+
+        if (mag < 0) {
+            z = sign + '0.';
+            while (mag++) z += '0';
+            return z + str.replace(/^\-/, '');
+        }
+        mag -= str.length;
+        while (mag--) z += '0';
+        return str + z;
+    }
 }
-
-
 
 /**
  * memory operations
@@ -100,14 +111,14 @@ export const systemOperation = (keyData, state) => {
         perform
     } = keyData,
         {
-            shouldCalcySwitchedOff,
+            isCalcySwitchedOff,
             currentDisplayValue
         } = state;
     switch (perform) {
-        case 'off': return { currentDisplayValue: '', shouldCalcySwitchedOff: true };
-        case 'on': return { currentDisplayValue: '0', shouldCalcySwitchedOff: false };
-        case 'clear': return { currentDisplayValue: (shouldCalcySwitchedOff ? '' : '0') };
-        default: return {};
+        case 'off': return { currentDisplayValue: '', isCalcySwitchedOff: true };
+        case 'on': return { currentDisplayValue: 0, isCalcySwitchedOff: false };
+        case 'clear': return { currentDisplayValue: (isCalcySwitchedOff ? '' : 0) };
+        default: return state;
     }
-    return {};
+    return state;
 }
