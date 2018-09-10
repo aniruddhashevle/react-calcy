@@ -5,6 +5,10 @@ import {
     SYSTEM
 } from '../constants/calculator-keys-type';
 
+/**
+ * all the key operations calling fun
+ * @return {object}
+ */
 export const keyOperations = (keyData, state) => {
     let {
         type,
@@ -31,6 +35,11 @@ export const keyOperations = (keyData, state) => {
     return {};
 }
 
+
+/**
+ * numeric operations
+ * @return {object}
+ */
 export const numericOperation = (keyData, state) => {
     let {
         type,
@@ -43,6 +52,12 @@ export const numericOperation = (keyData, state) => {
         result = null;
 }
 
+
+
+/**
+ * memory operations
+ * @return {object}
+ */
 export const memoryOperation = (keyData, state) => {
     let {
         type,
@@ -55,6 +70,11 @@ export const memoryOperation = (keyData, state) => {
         result = null;
 }
 
+
+/**
+ * arithmetic operations
+ * @return {object}
+ */
 export const arithmeticOperation = (keyData, state) => {
     let {
         type,
@@ -68,6 +88,11 @@ export const arithmeticOperation = (keyData, state) => {
 
 }
 
+
+/**
+ * system operations
+ * @return {object}
+ */
 export const systemOperation = (keyData, state) => {
     let {
         type,
