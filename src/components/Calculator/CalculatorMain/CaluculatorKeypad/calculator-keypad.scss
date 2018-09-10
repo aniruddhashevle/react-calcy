@@ -1,5 +1,63 @@
 @import '../../../assets/styles/variables.scss';
 
-.key {
-    font-family: $system;
+.keypad-wrapper {
+    position: relative;
+    margin: 10px 8px 0;
+    .model-name {
+        position: absolute;
+        left: 30px;
+        top: 15px;
+        font-size: 16px;
+        font-weight: bolder;
+    }
+    .keys-wrapper {
+        display: grid;
+        grid-template: repeat(6, 1fr) / repeat(5, 1fr);
+        grid-gap: 10px 12px;
+    }
+    .key {
+        height: 45px;
+        border-radius: 6px 6px 15px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #393a41;
+        color: $white;
+        font-family: $system;
+        > button {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border-color: transparent;
+            color: $white;
+            cursor: pointer;
+            font-size: 22px;
+            outline: none;
+        }
+        &.red {
+            background-color: #8c5869;
+        }
+        &.small {
+
+        }
+        &.large {
+            height: auto;
+        }
+        &.extra-cap {
+            position: relative;
+            background-color: #393a41;
+            > button {
+                height: 100%;
+                border-radius: 6px 6px 15px 15px;
+                background-color: #8c5869;
+            }
+        }
+        .on-text {
+            position: absolute;
+            top: 100%;
+            color: #39393b;
+            font-size: 13px;
+            font-weight: bolder;
+        }
+    }
 }
