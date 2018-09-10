@@ -2,3 +2,8 @@
   font-family: 'digital-display-italic';
   src: url('./components/assets/fonts/digital-7-italic.ttf') format('truetype');
 }
+
+@font-face {
+  font-family: 'system';
+  src: local(".SFNSText-Light"), local(".HelveticaNeueDeskInterface-Light"), local(".LucidaGrandeUI"), local("Ubuntu Light"), local("Segoe UI Light"), local("Roboto-Light"), local("DroidSans"), local("Tahoma");
+}
