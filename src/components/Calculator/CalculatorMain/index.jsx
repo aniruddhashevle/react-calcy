@@ -7,6 +7,7 @@ class CalculatorMain extends Component {
         return (
             <main>
                 <CaluculatorDisplay />
+                <span className="model-name">sl-300sv</span>
                 <CaluculatorKeypad />
             </main>
         )

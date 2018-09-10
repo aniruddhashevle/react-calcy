@@ -2,11 +2,18 @@ import React from 'react';
 
 import './calculator-display.css';
 
-const CalculatorHeader = () =>
+const CalculatorHeader = ({ showMemorySign }) =>
     <div className="display-container">
         <div className="display-wrapper">
-            <span className="display">1232327890</span>
-            <span>sl-300sv</span>
+            {
+                true &&
+                <div className="memory-sign">
+                    <span className="text-uppercase">m</span>
+                    <span className="separator">-</span>
+                    <span className="text-uppercase">e</span>
+                </div>
+            }
+            <span className="display-digits">1234567.8</span>
         </div>
     </div>
 

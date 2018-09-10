@@ -3,6 +3,6 @@
 @import './fonts.scss';
 
 .text-uppercase {
-    font-family: 'system';
+    font-family: $system;
     text-transform: uppercase;
 }

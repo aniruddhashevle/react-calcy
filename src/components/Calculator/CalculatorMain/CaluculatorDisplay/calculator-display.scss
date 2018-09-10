@@ -1,5 +1,50 @@
 @import '../../../assets/styles/variables.scss';
 
-.display {
-    font-family: $displayDigits;
+
+main {
+    width: 96%;
+    margin: 0 auto;
+    .display-container {
+        border: solid #60666d;
+        border-width: 10px 18px 20px;
+        border-radius: 10px;
+        border-bottom-left-radius: 7%;
+        border-bottom-right-radius: 7%;
+        .display-wrapper {
+            height: 106px;
+            border: 1px solid #7d7e7e;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            transform: scale(1.025);
+            box-shadow: 0px 8px 10px $grey, -10px 8px 15px $grey, 10px 8px 15px $grey;
+            background-color: #d7e1e2;
+            overflow: auto;
+            .memory-sign {
+                > span {
+                    display: block;
+                    font-family: $system;
+                    font-size: 18px;
+                    font-weight: bolder;
+                    &:first-of-type { margin-bottom: 8px; }
+                }
+                .separator {
+                    font-family: $displayDigits;
+                    font-size: 48px;
+                    font-weight: normal;
+                    line-height: 15px;
+                }
+            }
+            .display-digits {
+                margin-top: 12px;
+                display: inline-block;
+                font-family: $displayDigits;
+                font-size: 80px;
+                transform: scale(.9, 1.4);
+                .memory-sign {
+
+                }
+            }
+        }
+    }
 }
