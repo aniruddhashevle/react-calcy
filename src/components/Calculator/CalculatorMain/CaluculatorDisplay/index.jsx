@@ -2,7 +2,7 @@ import React from 'react';
 
 import './calculator-display.css';
 
-const CalculatorHeader = ({ showMemorySign }) =>
+const CalculatorHeader = ({ showMemorySign, currentDisplayValue }) =>
     <div className="display-container">
         <div className="display-wrapper">
             {
@@ -13,7 +13,7 @@ const CalculatorHeader = ({ showMemorySign }) =>
                     <span className="text-uppercase">e</span>
                 </div>
             }
-            <span className="display-digits">1234567.8</span>
+            <span className="display-digits">{currentDisplayValue}</span>
         </div>
     </div>
 
