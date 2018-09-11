@@ -1,10 +1,10 @@
 @import '../../../assets/styles/variables.scss';
 
-
 main {
     width: 96%;
     margin: 0 auto;
     .display-container {
+        box-sizing: border-box;
         border: solid #60666d;
         border-width: 10px 18px 20px;
         border-radius: 10px;

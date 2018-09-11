@@ -10,7 +10,8 @@ class CalculatorMain extends Component {
         this.state = {
             currentDisplayValue: '',
             showMemorySign: false,
-            isCalcySwitchedOff: true
+            isCalcySwitchedOff: true,
+            prevValue: ''
         }
     }
 
