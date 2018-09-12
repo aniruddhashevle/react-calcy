@@ -16,8 +16,8 @@ class CalculatorMain extends Component {
         }
     }
 
-    onKeyPress = (keyData) => {
-        if (keyData.perform) this.setState({ currentOperation: keyData.perform });
+    onKeyPress = async (keyData) => {
+        if (keyData.perform) await this.setState({ currentOperation: keyData });
         let state = keyOperations(keyData, this.state);
         this.setState({ ...state });
     }

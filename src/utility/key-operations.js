@@ -20,7 +20,8 @@ export const keyOperations = (keyData, state) => {
             currentDisplayValue,
             prevValue
         } = state,
-        result = {};
+        result = {},
+        shouldDisplayValue = '';
 
     //handle 15 digits
     if (currentDisplayValue && currentDisplayValue.length === 15) return state;
@@ -32,9 +33,14 @@ export const keyOperations = (keyData, state) => {
     } else {
         //handle calcy off
         if (isCalcySwitchedOff && type !== SYSTEM) return state;
-        
-        if (prevValue) state = { ...state, currentDisplayValue: content };
-        
+
+        if (prevValue)
+            if (prevValue === currentDisplayValue) shouldDisplayValue = content;
+            else if (type === NUMBER) shouldDisplayValue = currentDisplayValue + content;
+        if (!shouldDisplayValue) shouldDisplayValue = currentDisplayValue;
+
+        state = { ...state, currentDisplayValue: shouldDisplayValue };
+
         //parse string values to number
         state = { ...state, currentDisplayValue: parseValue(state.currentDisplayValue, true) };
         if (prevValue) state = { ...state, prevValue: parseValue(state.prevValue, true) }
@@ -43,6 +49,9 @@ export const keyOperations = (keyData, state) => {
             case SYSTEM:
                 result = systemOperation(keyData, state);
                 break;
+            // case NUMBER:
+            //     result = numericOperation(keyData, state);
+            //     break;
             case MEMORY:
                 result = memoryOperation(keyData, state);
                 break;
@@ -121,25 +130,27 @@ export const arithmeticOperation = (keyData, state) => {
     } = keyData,
         {
             currentDisplayValue,
-            prevValue
+            prevValue,
+            currentOperation
         } = state,
         result = null;
     // if (!prevValue) {
     //     return { ...state, prevValue: currentDisplayValue }
     // } else {
-    if (!prevValue)
-        state = { ...state, prevValue: currentDisplayValue };
-    switch (perform) {
-        case 'add': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue: currentDisplayValue };
-        case 'divide': return { currentDisplayValue: parseFloat(prevValue / currentDisplayValue), prevValue: currentDisplayValue };
-        case 'subtract': return { currentDisplayValue: prevValue - currentDisplayValue, prevValue: currentDisplayValue };
-        case 'multiply': return { currentDisplayValue: prevValue * currentDisplayValue, prevValue: currentDisplayValue };
-        // case 'sqrt': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
-        // case 'percentage': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
-        // case 'equals': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
-        // case 'signed': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
-        default: return state;
-    }
+    if (!prevValue && perform !== 'sqrt')
+        return { ...state, prevValue: currentDisplayValue };
+    else
+        switch (perform) {
+            case 'add': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue: currentDisplayValue };
+            case 'divide': return { currentDisplayValue: parseFloat(prevValue / currentDisplayValue), prevValue: currentDisplayValue };
+            case 'subtract': return { currentDisplayValue: prevValue - currentDisplayValue, prevValue: currentDisplayValue };
+            case 'multiply': return { currentDisplayValue: prevValue * currentDisplayValue, prevValue: currentDisplayValue };
+            case 'sqrt': return { currentDisplayValue: Math.sqrt(currentDisplayValue) };
+            // case 'percentage': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+            // case 'equals': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+            // case 'signed': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+            default: return state;
+        }
     // }
 
 }
@@ -159,16 +170,24 @@ export const numericOperation = (keyData, state) => {
         {
             currentDisplayValue,
             isCalcySwitchedOff,
-            prevValue
+            prevValue,
+            currentOperation,
+            showNewNumber
         } = state,
-        result = null;
-    if (!isCalcySwitchedOff && !prevValue) {
-        if (currentDisplayValue === 0)
-            return { currentDisplayValue: content }
-        else return { currentDisplayValue: currentDisplayValue + content }
-    }
-    if (prevValue) return { ...state, currentDisplayValue: content };
-    else return {};
+        result = null,
+        displayNumber;
+    // if (!isCalcySwitchedOff && !prevValue) {
+    //     if (currentDisplayValue === 0)
+    //         return { currentDisplayValue: content }
+    //     else return { currentDisplayValue: currentDisplayValue + content }
+    // }
+    // if (prevValue) return { ...state, currentDisplayValue: content };
+    // else return {};
+    if (prevValue)
+        displayNumber = showNewNumber ? content : currentDisplayValue + content;
+
+    return { ...state, currentDisplayValue: displayNumber };
+    // if (currentOperation) return { ...state, currentDisplayValue: content };
 }
 
 
