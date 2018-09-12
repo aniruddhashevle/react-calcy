@@ -21,14 +21,24 @@ export const keyOperations = (keyData, state) => {
             prevValue
         } = state,
         result = {};
-    if(currentDisplayValue && currentDisplayValue.length === 15) return state;
-    state = { ...state, currentDisplayValue: parseValue(currentDisplayValue, true) };
-    if (!perform && !isCalcySwitchedOff && !prevValue) {
+
+    //handle 15 digits
+    if (currentDisplayValue && currentDisplayValue.length === 15) return state;
+
+    if (!perform && !isCalcySwitchedOff && (!prevValue || prevValue === '0')) {
         if (currentDisplayValue === '' || currentDisplayValue === '0')
-            return { currentDisplayValue: content }
-        else return { currentDisplayValue: currentDisplayValue + content }
+            return { ...state, currentDisplayValue: content }
+        else return { ...state, currentDisplayValue: currentDisplayValue + content }
     } else {
-        if (prevValue) state = { ...state, prevValue: parseValue(prevValue, true) }
+        //handle calcy off
+        if (isCalcySwitchedOff && type !== SYSTEM) return state;
+        
+        if (prevValue) state = { ...state, currentDisplayValue: content };
+        
+        //parse string values to number
+        state = { ...state, currentDisplayValue: parseValue(state.currentDisplayValue, true) };
+        if (prevValue) state = { ...state, prevValue: parseValue(state.prevValue, true) }
+
         switch (type) {
             case SYSTEM:
                 result = systemOperation(keyData, state);
@@ -39,12 +49,11 @@ export const keyOperations = (keyData, state) => {
             case ARITHMETIC:
                 result = arithmeticOperation(keyData, state);
                 break;
-            case NUMBER:
-                result = numericOperation(keyData, state);
-                break;
-            default: result = {};
+            default: result = state;
         }
     }
+
+    //parse number values to string
     if (result) {
         if ('currentDisplayValue' in result) {
             result = { ...result, currentDisplayValue: parseValue(result.currentDisplayValue, false) }
@@ -65,7 +74,7 @@ export const parseValue = (currentDisplayValue, toNumber) => {
         return Number(currentDisplayValue);
     } else {
         let data = String(currentDisplayValue).split(/[eE]/);
-        if (data.length == 1) return data[0];
+        if (data.length === 1) return data[0];
 
         var z = '', sign = this < 0 ? '-' : '',
             str = data[0].replace('.', ''),
@@ -74,6 +83,7 @@ export const parseValue = (currentDisplayValue, toNumber) => {
         if (mag < 0) {
             z = sign + '0.';
             while (mag++) z += '0';
+            // eslint-disable-next-line
             return z + str.replace(/^\-/, '');
         }
         mag -= str.length;
@@ -114,21 +124,23 @@ export const arithmeticOperation = (keyData, state) => {
             prevValue
         } = state,
         result = null;
-    if (!prevValue) {
-        return { ...state, prevValue: currentDisplayValue }
-    } else {
-        switch (perform) {
-            case 'add': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue: '' };
-            case 'divide': return { currentDisplayValue: parseFloat(prevValue / currentDisplayValue), prevValue: '' };
-            case 'subtract': return { currentDisplayValue: prevValue - currentDisplayValue, prevValue: '' };
-            case 'multiply': return { currentDisplayValue: prevValue * currentDisplayValue, prevValue: '' };
-            // case 'sqrt': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
-            // case 'percentage': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
-            // case 'equals': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
-            // case 'signed': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
-            default: return state;
-        }
+    // if (!prevValue) {
+    //     return { ...state, prevValue: currentDisplayValue }
+    // } else {
+    if (!prevValue)
+        state = { ...state, prevValue: currentDisplayValue };
+    switch (perform) {
+        case 'add': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue: currentDisplayValue };
+        case 'divide': return { currentDisplayValue: parseFloat(prevValue / currentDisplayValue), prevValue: currentDisplayValue };
+        case 'subtract': return { currentDisplayValue: prevValue - currentDisplayValue, prevValue: currentDisplayValue };
+        case 'multiply': return { currentDisplayValue: prevValue * currentDisplayValue, prevValue: currentDisplayValue };
+        // case 'sqrt': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+        // case 'percentage': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+        // case 'equals': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+        // case 'signed': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+        default: return state;
     }
+    // }
 
 }
 
@@ -146,14 +158,17 @@ export const numericOperation = (keyData, state) => {
     } = keyData,
         {
             currentDisplayValue,
+            isCalcySwitchedOff,
             prevValue
         } = state,
         result = null;
-    if (prevValue) {
-        return { ...state, currentDisplayValue: content }
-    } else {
-
+    if (!isCalcySwitchedOff && !prevValue) {
+        if (currentDisplayValue === 0)
+            return { currentDisplayValue: content }
+        else return { currentDisplayValue: currentDisplayValue + content }
     }
+    if (prevValue) return { ...state, currentDisplayValue: content };
+    else return {};
 }
 
 
@@ -177,5 +192,4 @@ export const systemOperation = (keyData, state) => {
         case 'clear': return { currentDisplayValue: (isCalcySwitchedOff ? '' : 0), prevValue: 0 };
         default: return {};
     }
-    return {};
 }

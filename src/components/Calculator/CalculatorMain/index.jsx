@@ -11,11 +11,13 @@ class CalculatorMain extends Component {
             currentDisplayValue: '',
             showMemorySign: false,
             isCalcySwitchedOff: true,
-            prevValue: ''
+            prevValue: '',
+            currentOperation: ''
         }
     }
 
     onKeyPress = (keyData) => {
+        if (keyData.perform) this.setState({ currentOperation: keyData.perform });
         let state = keyOperations(keyData, this.state);
         this.setState({ ...state });
     }

@@ -124,11 +124,11 @@ export const CALCULATOR_KEYS = [
     {
         type: NUMBER,
         content: '.',
-        perform: 'float'
+        // perform: 'float'
     },
     {
         type: ARITHMETIC,
         content: '=',
-        perform: 'quals'
+        perform: 'equals'
     }
 ];
