@@ -137,18 +137,18 @@ export const arithmeticOperation = (keyData, state) => {
     // if (!prevValue) {
     //     return { ...state, prevValue: currentDisplayValue }
     // } else {
-    if (!prevValue && perform !== 'sqrt')
+    if (!prevValue && perform !== 'sqrt' && perform !== 'signed')
         return { ...state, prevValue: currentDisplayValue };
     else
         switch (perform) {
-            case 'add': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue: currentDisplayValue };
-            case 'divide': return { currentDisplayValue: parseFloat(prevValue / currentDisplayValue), prevValue: currentDisplayValue };
-            case 'subtract': return { currentDisplayValue: prevValue - currentDisplayValue, prevValue: currentDisplayValue };
-            case 'multiply': return { currentDisplayValue: prevValue * currentDisplayValue, prevValue: currentDisplayValue };
-            case 'sqrt': return { currentDisplayValue: Math.sqrt(currentDisplayValue) };
-            // case 'percentage': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
-            // case 'equals': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
-            // case 'signed': return { currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+            case 'add': return { ...state, currentDisplayValue: prevValue + currentDisplayValue, prevValue: currentDisplayValue };
+            case 'divide': return { ...state, currentDisplayValue: parseFloat(prevValue / currentDisplayValue), prevValue: currentDisplayValue };
+            case 'subtract': return { ...state, currentDisplayValue: prevValue - currentDisplayValue, prevValue: currentDisplayValue };
+            case 'multiply': return { ...state, currentDisplayValue: prevValue * currentDisplayValue, prevValue: currentDisplayValue };
+            case 'sqrt': return { ...state, currentDisplayValue: Math.sqrt(currentDisplayValue) };
+            // case 'percentage': return {...state, currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+            // case 'equals': return {...state, currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+            case 'signed': return { ...state, currentDisplayValue: (-currentDisplayValue) };
             default: return state;
         }
     // }
