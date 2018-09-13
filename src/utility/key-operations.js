@@ -49,9 +49,6 @@ export const keyOperations = (keyData, state) => {
             case SYSTEM:
                 result = systemOperation(keyData, state);
                 break;
-            // case NUMBER:
-            //     result = numericOperation(keyData, state);
-            //     break;
             case MEMORY:
                 result = memoryOperation(keyData, state);
                 break;
@@ -134,8 +131,7 @@ export const arithmeticOperation = (keyData, state) => {
             currentOperation,
             prePerform,
             isSamePerform
-        } = state,
-        result = null;
+        } = state;
 
     if ((!prevValue || isSamePerform) && perform !== 'sqrt' && perform !== 'signed' && perform !== 'equals')
         return { ...state, prevValue: currentDisplayValue, prePerform: perform };
