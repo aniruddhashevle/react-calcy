@@ -6,9 +6,8 @@ const CalculatorHeader = ({ showMemorySign, currentDisplayValue }) =>
     <div className="display-container">
         <div className="display-wrapper">
             {
-                <div className="memory-sign">
+                <div className={(`memory-sign ${showMemorySign ? 'show' : ''}`).trim()}>
                     {
-                        showMemorySign &&
                         <Fragment>
                             <span className="text-uppercase">m</span>
                             <span className="separator">-</span>

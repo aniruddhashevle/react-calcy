@@ -12,7 +12,7 @@ main {
         border-bottom-left-radius: 7%;
         border-bottom-right-radius: 7%;
         .display-wrapper {
-            height: 106px;
+            height: 108px;
             border: 1px solid #7d7e7e;
             padding: 3px;
             display: flex;
@@ -21,16 +21,18 @@ main {
             transform: scale(1.025);
             box-shadow: 0px 8px 10px $grey, -10px 8px 15px $grey, 10px 8px 15px $grey;
             background-color: #d7e1e2;
-            overflow: auto;
+            overflow: hidden;
             .memory-sign {
                 width: 20px;
                 > span {
                     display: block;
                     transform: skew(-8deg);
                     text-shadow: 1px 1px;
+                    visibility: hidden;
                     @include font-properties($font-size: 18px);
                     &:first-of-type { margin-bottom: 10px; }
                 }
+                &.show > span { visibility: visible; }
                 .separator {
                     text-shadow: none;
                     @include font-properties($font-family: $displayDigits, $font-size: 48px, $line-height: 15px);
@@ -40,7 +42,7 @@ main {
                 margin-top: 12px;
                 display: inline-block;
                 transform: scale(.9, 1.4);
-                @include font-properties($font-family: $displayDigits, $font-size: 80px);
+                @include font-properties($font-family: $displayDigits, $font-size: 80px, $line-height: 37px);
             }
         }
     }
