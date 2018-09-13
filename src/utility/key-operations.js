@@ -35,7 +35,7 @@ export const keyOperations = (keyData, state) => {
         if (isCalcySwitchedOff && type !== SYSTEM) return state;
 
         if (prevValue)
-            if (prevValue === currentDisplayValue) shouldDisplayValue = content;
+            if (prevValue === currentDisplayValue && type === NUMBER) shouldDisplayValue = content;
             else if (type === NUMBER) shouldDisplayValue = currentDisplayValue + content;
         if (!shouldDisplayValue) shouldDisplayValue = currentDisplayValue;
 
@@ -131,22 +131,23 @@ export const arithmeticOperation = (keyData, state) => {
         {
             currentDisplayValue,
             prevValue,
-            currentOperation
+            currentOperation,
+            prePerform
         } = state,
         result = null;
     // if (!prevValue) {
     //     return { ...state, prevValue: currentDisplayValue }
     // } else {
     if (!prevValue && perform !== 'sqrt' && perform !== 'signed')
-        return { ...state, prevValue: currentDisplayValue };
+        return { ...state, prevValue: currentDisplayValue, prePerform: perform };
     else
-        switch (perform) {
-            case 'add': return { ...state, currentDisplayValue: prevValue + currentDisplayValue, prevValue: currentDisplayValue };
-            case 'divide': return { ...state, currentDisplayValue: parseFloat(prevValue / currentDisplayValue), prevValue: currentDisplayValue };
-            case 'subtract': return { ...state, currentDisplayValue: prevValue - currentDisplayValue, prevValue: currentDisplayValue };
-            case 'multiply': return { ...state, currentDisplayValue: prevValue * currentDisplayValue, prevValue: currentDisplayValue };
+        switch (prePerform || perform) {
+            case 'add': return { ...state, currentDisplayValue: prevValue + currentDisplayValue, prevValue: 0, prePerform: '' };
+            case 'divide': return { ...state, currentDisplayValue: parseFloat(prevValue / currentDisplayValue), prevValue: 0, prePerform: '' };
+            case 'subtract': return { ...state, currentDisplayValue: prevValue - currentDisplayValue, prevValue: 0, prePerform: '' };
+            case 'multiply': return { ...state, currentDisplayValue: prevValue * currentDisplayValue, prevValue: 0, prePerform: '' };
             case 'sqrt': return { ...state, currentDisplayValue: Math.sqrt(currentDisplayValue) };
-            // case 'percentage': return {...state, currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+            case 'percentage': return { ...state, currentDisplayValue: prevValue * currentDisplayValue / 100, prevValue };
             // case 'equals': return {...state, currentDisplayValue: prevValue + currentDisplayValue, prevValue };
             case 'signed': return { ...state, currentDisplayValue: (-currentDisplayValue) };
             default: return state;

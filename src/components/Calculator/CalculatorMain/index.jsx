@@ -9,10 +9,11 @@ class CalculatorMain extends Component {
         super(props);
         this.state = {
             currentDisplayValue: '',
+            prevValue: '',
+            currentOperation: '',
+            prePerform: '',
             showMemorySign: false,
             isCalcySwitchedOff: true,
-            prevValue: '',
-            currentOperation: ''
         }
     }
 
