@@ -24,3 +24,24 @@ export const parseValue = (currentDisplayValue, toNumber) => {
         return str + z;
     }
 }
+
+
+/**
+ * setMaxLengthWithDecimalHandling
+ * @return {Number}
+ */
+export const decimalHandlingWithMaxLenfth = (content, currentDisplayValue, maxDigit) => {
+    if (currentDisplayValue) {
+        let val = 0;
+        let decimalCharCount = charCount(currentDisplayValue + content, '.');
+        if (decimalCharCount > 1) val = currentDisplayValue;
+        else val = currentDisplayValue + content;
+        if (val) val = val.substring(0, maxDigit)
+        return val;
+    } else return 0;
+}
+
+
+export const charCount = (string, char) => {
+    return string.split(char).length - 1;
+}

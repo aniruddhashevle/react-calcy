@@ -3,6 +3,7 @@ import CaluculatorDisplay from './CaluculatorDisplay';
 import CaluculatorKeypad from './CaluculatorKeypad';
 import { CALCULATOR_KEYS } from '../../../config/calculator-keys';
 import { keyOperations } from '../../../utility/key-operations';
+import { SWITCH_OFF_TIME } from '../../../constants/system-limits';
 
 class CalculatorMain extends Component {
     constructor(props) {
@@ -16,7 +17,8 @@ class CalculatorMain extends Component {
             showMemorySign: false,
             isCalcySwitchedOff: true,
             isSamePerform: false,
-            memoryStore: ''
+            memoryStore: '',
+            isNewValue: false
         }
     }
 
@@ -28,16 +30,27 @@ class CalculatorMain extends Component {
             {
                 perform,
                 type
-            } = keyData;
-        debugger;
-        //check for if user clicks on diff arithmetic keys twice
-        if (perform && currentOperation && currentOperation.perform && type === currentType) await this.setState({ isSamePerform: true, currentType: type });
-        else await this.setState({ isSamePerform: false, currentType: type });
+            } = keyData,
+            setStateObj = { currentType: type };
 
-        if (perform) await this.setState({ currentOperation: keyData });
+        //check for if user clicks on diff arithmetic keys twice
+        if (perform && currentOperation && currentOperation.perform && type === currentType) setStateObj = { ...setStateObj, isSamePerform: true };
+        else setStateObj = { ...setStateObj, isSamePerform: false };
+
+        if (perform) setStateObj = { ...setStateObj, currentOperation: keyData };
+
+        await this.setState({ ...setStateObj });
+
+        //swtich the calcy off after SWITCH_OFF_TIME its set to 600000 ms
+        if (perform === 'on') {
+            setTimeout(async () => {
+                let offObj = CALCULATOR_KEYS.find(item => item.perform === 'off');
+                let state = keyOperations(offObj, this.state);
+                await this.setState({ ...state });
+            }, SWITCH_OFF_TIME);
+        }
 
         let state = keyOperations(keyData, this.state);
-
         await this.setState({ ...state });
     }
 

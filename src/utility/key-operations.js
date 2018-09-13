@@ -4,7 +4,8 @@ import {
     ARITHMETIC,
     SYSTEM
 } from '../constants/calculator-keys-type';
-import { parseValue } from './utils';
+import { parseValue, decimalHandlingWithMaxLenfth } from './utils';
+import { MAX_DIGITS } from '../constants/system-limits';
 
 /**
  * all the key operations calling fun
@@ -19,28 +20,28 @@ export const keyOperations = (keyData, state) => {
         {
             isCalcySwitchedOff,
             currentDisplayValue,
-            prevValue
+            prevValue,
+            currentOperation,
+            isNewValue
         } = state,
         result = null,
         shouldDisplayValue = '';
 
-    //handle 15 digits
-    if (currentDisplayValue && currentDisplayValue.length === 15) return state;
-
     if (!perform && !isCalcySwitchedOff && (!prevValue || prevValue === '0')) {
         if (currentDisplayValue === '' || currentDisplayValue === '0')
             return { ...state, currentDisplayValue: content }
-        else return { ...state, currentDisplayValue: currentDisplayValue + content }
+        else return { ...state, currentDisplayValue: decimalHandlingWithMaxLenfth(content, currentDisplayValue, MAX_DIGITS) };
     } else {
         //handle calcy off
         if (isCalcySwitchedOff && type !== SYSTEM) return state;
 
         if (prevValue)
-            if (prevValue === currentDisplayValue && type === NUMBER) shouldDisplayValue = content;
+            if (prevValue === currentDisplayValue && type === NUMBER && !isNewValue) { shouldDisplayValue = content; isNewValue = true; }
             else if (type === NUMBER) shouldDisplayValue = currentDisplayValue + content;
+            else if (type !== NUMBER) isNewValue = false;
         if (!shouldDisplayValue) shouldDisplayValue = currentDisplayValue;
 
-        state = { ...state, currentDisplayValue: shouldDisplayValue };
+        state = { ...state, currentDisplayValue: shouldDisplayValue, isNewValue };
 
         //parse string values to number
         state = { ...state, currentDisplayValue: parseValue(state.currentDisplayValue, true), prevValue: parseValue(state.prevValue, true), memoryStore: parseValue(state.memoryStore, true) };
