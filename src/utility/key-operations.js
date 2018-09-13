@@ -109,8 +109,7 @@ export const memoryOperation = (keyData, state) => {
         {
             currentDisplayValue,
             memoryStore
-        } = state,
-        result = null;
+        } = state;
     switch (perform) {
         case 'memory-clear': return { ...state, showMemorySign: false, memoryStore: 0 };
         case 'memory-stored': return { ...state, currentDisplayValue: memoryStore, showMemorySign: true };
@@ -159,13 +158,10 @@ export const arithmeticOperation = (keyData, state) => {
  */
 export const systemOperation = (keyData, state) => {
     let {
-        type,
-        content,
         perform
     } = keyData,
         {
             isCalcySwitchedOff,
-            currentDisplayValue
         } = state;
     switch (perform) {
         case 'off': return { ...state, currentDisplayValue: '', isCalcySwitchedOff: true, prevValue: '', showMemorySign: false };
