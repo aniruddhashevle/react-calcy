@@ -4,10 +4,11 @@ import {
     ARITHMETIC,
     SYSTEM
 } from '../constants/calculator-keys-type';
+import { parseValue } from './utils';
 
 /**
  * all the key operations calling fun
- * @return {object}
+ * @return {Object}
  */
 export const keyOperations = (keyData, state) => {
     let {
@@ -20,7 +21,7 @@ export const keyOperations = (keyData, state) => {
             currentDisplayValue,
             prevValue
         } = state,
-        result = {},
+        result = null,
         shouldDisplayValue = '';
 
     //handle 15 digits
@@ -42,8 +43,7 @@ export const keyOperations = (keyData, state) => {
         state = { ...state, currentDisplayValue: shouldDisplayValue };
 
         //parse string values to number
-        state = { ...state, currentDisplayValue: parseValue(state.currentDisplayValue, true) };
-        if (prevValue) state = { ...state, prevValue: parseValue(state.prevValue, true) }
+        state = { ...state, currentDisplayValue: parseValue(state.currentDisplayValue, true), prevValue: parseValue(state.prevValue, true), memoryStore: parseValue(state.memoryStore, true) };
 
         switch (type) {
             case SYSTEM:
@@ -60,47 +60,14 @@ export const keyOperations = (keyData, state) => {
     }
 
     //parse number values to string
-    if (result) {
-        if ('currentDisplayValue' in result) {
-            result = { ...result, currentDisplayValue: parseValue(result.currentDisplayValue, false) }
-        }
-        if ('prevValue' in result) {
-            result = { ...result, prevValue: parseValue(result.prevValue, false) }
-        }
-    }
+    if (result) result = { ...result, currentDisplayValue: parseValue(result.currentDisplayValue, false), prevValue: parseValue(result.prevValue, false), memoryStore: parseValue(result.memoryStore, false) }
+
     return result;
 }
 
 /**
- * parse string to number and other way around
- * @return {number/string}
- */
-export const parseValue = (currentDisplayValue, toNumber) => {
-    if (toNumber) {
-        return Number(currentDisplayValue);
-    } else {
-        let data = String(currentDisplayValue).split(/[eE]/);
-        if (data.length === 1) return data[0];
-
-        var z = '', sign = this < 0 ? '-' : '',
-            str = data[0].replace('.', ''),
-            mag = Number(data[1]) + 1;
-
-        if (mag < 0) {
-            z = sign + '0.';
-            while (mag++) z += '0';
-            // eslint-disable-next-line
-            return z + str.replace(/^\-/, '');
-        }
-        mag -= str.length;
-        while (mag--) z += '0';
-        return str + z;
-    }
-}
-
-/**
  * memory operations
- * @return {object}
+ * @return {Object}
  */
 export const memoryOperation = (keyData, state) => {
     let {
@@ -109,23 +76,36 @@ export const memoryOperation = (keyData, state) => {
         {
             currentDisplayValue,
             memoryStore
-        } = state;
+        } = state,
+        result = null;
     switch (perform) {
-        case 'memory-clear': return { ...state, showMemorySign: false, memoryStore: 0 };
-        case 'memory-stored': return { ...state, currentDisplayValue: memoryStore, showMemorySign: true };
-        case 'memory-plus': return { ...state, memoryStore: memoryStore + currentDisplayValue, showMemorySign: true };
-        case 'memory-minus': return { ...state, memoryStore: memoryStore - currentDisplayValue, showMemorySign: true };
-        default: return state;
+        case 'memory-clear':
+            result = memoryStore ? { ...state, showMemorySign: false, memoryStore: 0 } : state;
+            break;
+        case 'memory-stored':
+            result = memoryStore ? { ...state, currentDisplayValue: memoryStore, showMemorySign: true } : state;
+            break;
+        case 'memory-plus':
+            result = currentDisplayValue ? { ...state, memoryStore: memoryStore + currentDisplayValue, showMemorySign: true } : state;
+            break;
+        case 'memory-minus':
+            result = currentDisplayValue ? { ...state, memoryStore: memoryStore - currentDisplayValue, showMemorySign: true } : state;
+            break;
+        default: result = state;
     }
+    //hide memory sign if memory store is zero
+    if (result && result.memoryStore === 0) result = { ...result, showMemorySign: false }
+    return result;
 }
 
 
 /**
  * arithmetic operations
- * @return {object}
+ * @return {Object}
  */
 export const arithmeticOperation = (keyData, state) => {
     let {
+        isIndependentArithmetic,
         perform
     } = keyData,
         {
@@ -135,7 +115,7 @@ export const arithmeticOperation = (keyData, state) => {
             isSamePerform
         } = state;
 
-    if ((!prevValue || isSamePerform) && perform !== 'sqrt' && perform !== 'signed' && perform !== 'equals')
+    if ((!prevValue || isSamePerform) && !isIndependentArithmetic)
         return { ...state, prevValue: currentDisplayValue, prePerform: perform };
     else
         switch (prePerform || perform) {
@@ -154,7 +134,7 @@ export const arithmeticOperation = (keyData, state) => {
 
 /**
  * system operations
- * @return {object}
+ * @return {Object}
  */
 export const systemOperation = (keyData, state) => {
     let {

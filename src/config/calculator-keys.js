@@ -5,12 +5,25 @@ import {
     SYSTEM
 } from '../constants/calculator-keys-type';
 
+
+/**
+ * calculator keys configuration for view and logics
+ * 
+ * type: type of key with values NUMBER, MEMORY, ARITHMETIC, SYSTEM
+ * content: content to be shown for the respective key
+ * className: class name to be assigned for the respective key
+ * perform: actual functionality for the respective key
+ * isIndependentArithmetic: only for ARITHMETIC keys which are not dependent on any other number like sqrt, signed and equals
+ * 
+ * @return {Array}
+ */
 export const CALCULATOR_KEYS = [
     {
         type: ARITHMETIC,
         content: '√',
         className: 'small col-span-3-to-1',
-        perform: 'sqrt'
+        perform: 'sqrt',
+        isIndependentArithmetic: true
     },
     {
         type: SYSTEM,
@@ -68,7 +81,8 @@ export const CALCULATOR_KEYS = [
     {
         type: ARITHMETIC,
         content: '+/-',
-        perform: 'signed'
+        perform: 'signed',
+        isIndependentArithmetic: true
     },
     {
         type: NUMBER,
@@ -128,6 +142,7 @@ export const CALCULATOR_KEYS = [
     {
         type: ARITHMETIC,
         content: '=',
-        perform: 'equals'
+        perform: 'equals',
+        isIndependentArithmetic: true
     }
 ];

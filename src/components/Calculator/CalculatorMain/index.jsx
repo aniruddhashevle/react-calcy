@@ -62,5 +62,4 @@ class CalculatorMain extends Component {
     }
 }
 
-
 export default CalculatorMain;
