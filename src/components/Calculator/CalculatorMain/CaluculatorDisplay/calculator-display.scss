@@ -1,4 +1,5 @@
 @import '../../../assets/styles/variables.scss';
+@import '../../../assets/styles/mixins.scss';
 
 main {
     width: 96%;
@@ -26,27 +27,20 @@ main {
                 > span {
                     display: block;
                     transform: skew(-8deg);
-                    font-family: $system;
-                    font-size: 18px;
-                    font-weight: bolder;
                     text-shadow: 1px 1px;
+                    @include font-properties($font-size: 18px);
                     &:first-of-type { margin-bottom: 10px; }
                 }
                 .separator {
-                    font-family: $displayDigits;
-                    font-size: 48px;
-                    font-weight: normal;
-                    line-height: 15px;
                     text-shadow: none;
+                    @include font-properties($font-family: $displayDigits, $font-size: 48px, $line-height: 15px);
                 }
             }
             .display-digits {
                 margin-top: 12px;
                 display: inline-block;
-                font-family: $displayDigits;
-                font-size: 80px;
                 transform: scale(.9, 1.4);
-                // justify-self: flex-end;
+                @include font-properties($font-family: $displayDigits, $font-size: 80px);
             }
         }
     }

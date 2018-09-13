@@ -7,8 +7,7 @@
         position: absolute;
         left: 30px;
         top: 15px;
-        font-size: 16px;
-        font-weight: bolder;
+        @include font-properties($font-size: 16px,  $font-weight: bolder);
     }
     .keys-wrapper {
         display: grid;
@@ -21,21 +20,19 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #393a41;
-        color: $white;
-        font-family: $system;
+        background-color: $keyBlackBlackground;
+        @include font-properties($color: $white);
         > button {
             width: 100%;
             height: 100%;
             background: transparent;
             border-color: transparent;
-            color: $white;
             cursor: pointer;
-            font-size: 22px;
             outline: none;
+            @include font-properties($font-size: 22px, $color: $white);
         }
         &.red {
-            background-color: #8c5869;
+            background-color: $keyBlackRedground;
         }
         &.small {
 
@@ -45,19 +42,17 @@
         }
         &.extra-cap {
             position: relative;
-            background-color: #393a41;
+            background-color: $keyBlackBlackground;
             > button {
                 height: 100%;
                 border-radius: 6px 6px 15px 15px;
-                background-color: #8c5869;
+                background-color: $keyBlackRedground;
             }
         }
         .on-text {
             position: absolute;
             top: 100%;
-            color: #39393b;
-            font-size: 13px;
-            font-weight: bolder;
+            @include font-properties($font-size: 13px, $color: #39393b);
         }
     }
 }
