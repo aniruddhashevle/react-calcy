@@ -124,7 +124,6 @@ export const CALCULATOR_KEYS = [
     {
         type: NUMBER,
         content: '.',
-        // perform: 'float'
     },
     {
         type: ARITHMETIC,

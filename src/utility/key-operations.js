@@ -136,10 +136,8 @@ export const arithmeticOperation = (keyData, state) => {
             isSamePerform
         } = state,
         result = null;
-    // if (!prevValue) {
-    //     return { ...state, prevValue: currentDisplayValue }
-    // } else {
-    if ((!prevValue || isSamePerform) && perform !== 'sqrt' && perform !== 'signed')
+
+    if ((!prevValue || isSamePerform) && perform !== 'sqrt' && perform !== 'signed' && perform !== 'equals')
         return { ...state, prevValue: currentDisplayValue, prePerform: perform };
     else
         switch (prePerform || perform) {
@@ -149,12 +147,10 @@ export const arithmeticOperation = (keyData, state) => {
             case 'multiply': return { ...state, currentDisplayValue: prevValue * currentDisplayValue, prevValue: 0, prePerform: '' };
             case 'sqrt': return { ...state, currentDisplayValue: Math.sqrt(currentDisplayValue) };
             case 'percentage': return { ...state, currentDisplayValue: prevValue * currentDisplayValue / 100, prevValue };
-            // case 'equals': return {...state, currentDisplayValue: prevValue + currentDisplayValue, prevValue };
+            case 'equals': return prePerform ? arithmeticOperation(keyData, state) : state;
             case 'signed': return { ...state, currentDisplayValue: (-currentDisplayValue) };
             default: return state;
         }
-    // }
-
 }
 
 
