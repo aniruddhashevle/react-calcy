@@ -26,7 +26,7 @@ export const CALCULATOR_KEYS = [
     {
         type: MEMORY,
         content: 'MR',
-        perform: 'memory-recall'
+        perform: 'memory-stored'
     },
     {
         type: MEMORY,

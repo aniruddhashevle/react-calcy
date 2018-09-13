@@ -16,6 +16,7 @@ class CalculatorMain extends Component {
             showMemorySign: false,
             isCalcySwitchedOff: true,
             isSamePerform: false,
+            memoryStore: ''
         }
     }
 
@@ -30,14 +31,14 @@ class CalculatorMain extends Component {
             } = keyData;
         debugger;
         //check for if user clicks on diff arithmetic keys twice
-        if (perform && currentOperation && currentOperation.perform &&  type === currentType) await this.setState({ isSamePerform: true, currentType: type });
-        else await this.setState({ isSamePerform: false, isSamePerform: false, currentType: type });
-        
+        if (perform && currentOperation && currentOperation.perform && type === currentType) await this.setState({ isSamePerform: true, currentType: type });
+        else await this.setState({ isSamePerform: false, currentType: type });
+
         if (perform) await this.setState({ currentOperation: keyData });
-        
+
         let state = keyOperations(keyData, this.state);
-        
-        this.setState({ ...state });
+
+        await this.setState({ ...state });
     }
 
     render() {

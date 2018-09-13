@@ -104,14 +104,20 @@ export const parseValue = (currentDisplayValue, toNumber) => {
  */
 export const memoryOperation = (keyData, state) => {
     let {
-        type,
-        content,
         perform
     } = keyData,
         {
-            currentDisplayValue
+            currentDisplayValue,
+            memoryStore
         } = state,
         result = null;
+    switch (perform) {
+        case 'memory-clear': return { ...state, showMemorySign: false, memoryStore: 0 };
+        case 'memory-stored': return { ...state, currentDisplayValue: memoryStore, showMemorySign: true };
+        case 'memory-plus': return { ...state, memoryStore: memoryStore + currentDisplayValue, showMemorySign: true };
+        case 'memory-minus': return { ...state, memoryStore: memoryStore - currentDisplayValue, showMemorySign: true };
+        default: return state;
+    }
 }
 
 
@@ -121,14 +127,11 @@ export const memoryOperation = (keyData, state) => {
  */
 export const arithmeticOperation = (keyData, state) => {
     let {
-        type,
-        content,
         perform
     } = keyData,
         {
             currentDisplayValue,
             prevValue,
-            currentOperation,
             prePerform,
             isSamePerform
         } = state;
@@ -150,41 +153,6 @@ export const arithmeticOperation = (keyData, state) => {
 }
 
 
-
-/**
- * numeric operations
- * @return {object}
- */
-export const numericOperation = (keyData, state) => {
-    let {
-        type,
-        content,
-        perform
-    } = keyData,
-        {
-            currentDisplayValue,
-            isCalcySwitchedOff,
-            prevValue,
-            currentOperation,
-            showNewNumber
-        } = state,
-        result = null,
-        displayNumber;
-    // if (!isCalcySwitchedOff && !prevValue) {
-    //     if (currentDisplayValue === 0)
-    //         return { currentDisplayValue: content }
-    //     else return { currentDisplayValue: currentDisplayValue + content }
-    // }
-    // if (prevValue) return { ...state, currentDisplayValue: content };
-    // else return {};
-    if (prevValue)
-        displayNumber = showNewNumber ? content : currentDisplayValue + content;
-
-    return { ...state, currentDisplayValue: displayNumber };
-    // if (currentOperation) return { ...state, currentDisplayValue: content };
-}
-
-
 /**
  * system operations
  * @return {object}
@@ -200,9 +168,9 @@ export const systemOperation = (keyData, state) => {
             currentDisplayValue
         } = state;
     switch (perform) {
-        case 'off': return { currentDisplayValue: '', isCalcySwitchedOff: true, prevValue: '' };
-        case 'on': return { currentDisplayValue: 0, isCalcySwitchedOff: false, prevValue: '' };
-        case 'clear': return { currentDisplayValue: (isCalcySwitchedOff ? '' : 0), prevValue: 0 };
+        case 'off': return { ...state, currentDisplayValue: '', isCalcySwitchedOff: true, prevValue: '', showMemorySign: false };
+        case 'on': return { ...state, currentDisplayValue: 0, isCalcySwitchedOff: false, prevValue: '' };
+        case 'clear': return { ...state, currentDisplayValue: (isCalcySwitchedOff ? '' : 0), prevValue: 0 };
         default: return {};
     }
 }

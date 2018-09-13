@@ -23,19 +23,21 @@ main {
             overflow: auto;
             .memory-sign {
                 width: 20px;
-                // justify-self: flex-start;
                 > span {
                     display: block;
+                    transform: skew(-8deg);
                     font-family: $system;
                     font-size: 18px;
                     font-weight: bolder;
-                    &:first-of-type { margin-bottom: 8px; }
+                    text-shadow: 1px 1px;
+                    &:first-of-type { margin-bottom: 10px; }
                 }
                 .separator {
                     font-family: $displayDigits;
                     font-size: 48px;
                     font-weight: normal;
                     line-height: 15px;
+                    text-shadow: none;
                 }
             }
             .display-digits {
