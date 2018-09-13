@@ -132,13 +132,14 @@ export const arithmeticOperation = (keyData, state) => {
             currentDisplayValue,
             prevValue,
             currentOperation,
-            prePerform
+            prePerform,
+            isSamePerform
         } = state,
         result = null;
     // if (!prevValue) {
     //     return { ...state, prevValue: currentDisplayValue }
     // } else {
-    if (!prevValue && perform !== 'sqrt' && perform !== 'signed')
+    if ((!prevValue || isSamePerform) && perform !== 'sqrt' && perform !== 'signed')
         return { ...state, prevValue: currentDisplayValue, prePerform: perform };
     else
         switch (prePerform || perform) {

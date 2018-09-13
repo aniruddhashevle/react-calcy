@@ -10,16 +10,33 @@ class CalculatorMain extends Component {
         this.state = {
             currentDisplayValue: '',
             prevValue: '',
-            currentOperation: '',
+            currentOperation: null,
             prePerform: '',
+            currentType: '',
             showMemorySign: false,
             isCalcySwitchedOff: true,
+            isSamePerform: false
         }
     }
 
     onKeyPress = async (keyData) => {
-        if (keyData.perform) await this.setState({ currentOperation: keyData });
+        let {
+            currentOperation,
+            currentType
+        } = this.state,
+            {
+                perform,
+                type
+            } = keyData;
+        debugger;
+        //check for if user clicks on diff arithmetic keys twice
+        if (perform && currentOperation && currentOperation.perform && perform !== currentOperation.perform && type === currentType) await this.setState({ isSamePerform: true, currentType: type });
+        else await this.setState({ isSamePerform: false, currentType: type });
+        
+        if (perform) await this.setState({ currentOperation: keyData });
+        
         let state = keyOperations(keyData, this.state);
+        
         this.setState({ ...state });
     }
 
